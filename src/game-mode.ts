@@ -15,7 +15,8 @@ export enum GameModes {
   ENDLESS,
   SPLICED_ENDLESS,
   DAILY,
-  CHALLENGE
+  CHALLENGE,
+  GREED
 }
 
 interface GameModeConfig {
@@ -30,6 +31,7 @@ interface GameModeConfig {
   isSplicedOnly?: boolean;
   isChallenge?: boolean;
   hasMysteryEncounters?: boolean;
+  isGreed?: boolean;
 }
 
 // Describes min and max waves for MEs in specific game modes
@@ -53,6 +55,7 @@ export class GameMode implements GameModeConfig {
   public hasMysteryEncounters: boolean;
   public minMysteryEncounterWave: number;
   public maxMysteryEncounterWave: number;
+  public isGreed: boolean;
 
   constructor(modeId: GameModes, config: GameModeConfig, battleConfig?: FixedBattleConfigs) {
     this.modeId = modeId;
@@ -146,6 +149,12 @@ export class GameMode implements GameModeConfig {
     if (this.isDaily) {
       return waveIndex % 10 === 5 || (!(waveIndex % 10) && waveIndex > 10 && !this.isWaveFinal(waveIndex));
     }
+    /**
+     * Greed spawns trainers on floors ending in 6, 7, 8, 9
+     */
+    if (this.isGreed) {
+      return waveIndex % 10 === 6, 7, 8, 9 || (!(waveIndex % 10) && waveIndex > 10 && !this.isWaveFinal(waveIndex));
+    }
     if ((waveIndex % 30) === (arena.scene.offsetGym ? 0 : 20) && !this.isWaveFinal(waveIndex)) {
       return true;
     } else if (waveIndex % 10 !== 1 && waveIndex % 10) {
@@ -188,6 +197,8 @@ export class GameMode implements GameModeConfig {
     switch (this.modeId) {
       case GameModes.DAILY:
         return waveIndex > 10 && waveIndex < 50 && !(waveIndex % 10);
+      case GameModes.GREED:
+        return waveIndex > 10 && waveIndex < 100 && !(waveIndex % 10) && (biomeType !== Biome.END || this.isWaveFinal(waveIndex));
       default:
         return (waveIndex % 30) === (offsetGym ? 0 : 20) && (biomeType !== Biome.END || this.isClassic || this.isWaveFinal(waveIndex));
     }
@@ -218,6 +229,8 @@ export class GameMode implements GameModeConfig {
       case GameModes.SPLICED_ENDLESS:
         return !(waveIndex % 250);
       case GameModes.DAILY:
+        return waveIndex === 50;
+      case GameModes.GREED:
         return waveIndex === 50;
     }
   }
@@ -289,6 +302,7 @@ export class GameMode implements GameModeConfig {
     switch (this.modeId) {
       case GameModes.CLASSIC:
       case GameModes.CHALLENGE:
+      case GameModes.GREED:
         return 5000;
       case GameModes.DAILY:
         return 2500;
@@ -302,6 +316,7 @@ export class GameMode implements GameModeConfig {
       case GameModes.CLASSIC:
       case GameModes.CHALLENGE:
       case GameModes.DAILY:
+      case GameModes.GREED:
         return !isBoss ? 18 : 6;
       case GameModes.ENDLESS:
       case GameModes.SPLICED_ENDLESS:
@@ -321,6 +336,8 @@ export class GameMode implements GameModeConfig {
         return i18next.t("gameMode:dailyRun");
       case GameModes.CHALLENGE:
         return i18next.t("gameMode:challenge");
+      case GameModes.GREED:
+        return i18next.t("gameMode:greed");
     }
   }
 
@@ -350,6 +367,8 @@ export class GameMode implements GameModeConfig {
         return i18next.t("gameMode:dailyRun");
       case GameModes.CHALLENGE:
         return i18next.t("gameMode:challenge");
+      case GameModes.GREED:
+        return i18next.t("gameMode:greed");
     }
   }
 }
@@ -366,5 +385,7 @@ export function getGameMode(gameMode: GameModes): GameMode {
       return new GameMode(GameModes.DAILY, { isDaily: true, hasTrainers: true, hasNoShop: true });
     case GameModes.CHALLENGE:
       return new GameMode(GameModes.CHALLENGE, { isClassic: true, hasTrainers: true, isChallenge: true, hasMysteryEncounters: true }, classicFixedBattles);
+    case GameModes.GREED:
+      return new GameMode(GameModes.DAILY, { isGreed: true, hasTrainers: true, hasRandomBosses: true, hasW10Shop: true });
   }
 }
