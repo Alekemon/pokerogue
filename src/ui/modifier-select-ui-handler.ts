@@ -189,9 +189,10 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
 
     const typeOptions = args[1] as ModifierTypeOption[];
     const removeHealShop = this.scene.gameMode.hasNoShop;
+    const removeHealShopGreed = this.scene.gameMode.hasW10Shop;
     const baseShopCost = new IntegerHolder(this.scene.getWaveMoneyAmount(1));
     this.scene.applyModifier(HealShopCostModifier, true, baseShopCost);
-    const shopTypeOptions = !removeHealShop
+    const shopTypeOptions = !removeHealShop && !removeHealShopGreed
       ? getPlayerShopModifierTypeOptionsForWave(this.scene.currentBattle.waveIndex, baseShopCost.value)
       : [];
     const optionsYOffset = shopTypeOptions.length > SHOP_OPTIONS_ROW_LIMIT ? -SINGLE_SHOP_ROW_YOFFSET : -DOUBLE_SHOP_ROW_YOFFSET;
@@ -295,7 +296,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         if (this.scene.shopCursorTarget === ShopCursorTarget.CHECK_TEAM) {
           this.setRowCursor(0);
           this.setCursor(2);
-        } else if ((this.scene.shopCursorTarget === ShopCursorTarget.SHOP) && this.scene.gameMode.hasNoShop) {
+        } else if ((this.scene.shopCursorTarget === ShopCursorTarget.SHOP) && this.scene.gameMode.hasNoShop && (this.scene.gameMode.hasW10Shop && !(return waveIndex % 10 === 10 || return waveIndex === 1))) {
           this.setRowCursor(ShopCursorTarget.REWARDS);
           this.setCursor(0);
         } else {
