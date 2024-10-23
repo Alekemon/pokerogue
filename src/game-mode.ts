@@ -32,6 +32,7 @@ interface GameModeConfig {
   isChallenge?: boolean;
   hasMysteryEncounters?: boolean;
   isGreed?: boolean;
+  hasW10Shop?: boolean;
 }
 
 // Describes min and max waves for MEs in specific game modes
@@ -56,6 +57,7 @@ export class GameMode implements GameModeConfig {
   public minMysteryEncounterWave: number;
   public maxMysteryEncounterWave: number;
   public isGreed: boolean;
+  public hasW10Shop: boolean;
 
   constructor(modeId: GameModes, config: GameModeConfig, battleConfig?: FixedBattleConfigs) {
     this.modeId = modeId;
