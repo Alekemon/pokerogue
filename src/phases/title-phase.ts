@@ -143,6 +143,14 @@ export class TitlePhase extends Phase {
       }
     },
     {
+      label: i18next.t("menu:greedMode"),
+      handler: () => {
+        setModeAndEnd(GameModes.GREED);
+        return true;
+      },
+      keepOpen: true
+    },
+    {
       label: i18next.t("menu:dailyRun"),
       handler: () => {
         this.initDailyRun();
