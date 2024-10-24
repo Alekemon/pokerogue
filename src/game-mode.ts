@@ -155,7 +155,7 @@ export class GameMode implements GameModeConfig {
      * Greed spawns trainers on floors ending in 6, 7, 8, 9
      */
     if (this.isGreed) {
-      return waveIndex === [6, 7, 8, 9, 16, 17, 18, 19, 26, 27, 28, 29, 36, 37, 38, 39, 46, 47, 48, 49];
+      return waveIndex === (6 || 7 || 8 || 9 || 16 || 17 || 18 || 19 || 26 || 27 || 28 || 29 || 36 || 37 || 38 || 39 || 46 || 47 || 48 || 49);
     }
     if ((waveIndex % 30) === (arena.scene.offsetGym ? 0 : 20) && !this.isWaveFinal(waveIndex)) {
       return true;
@@ -233,7 +233,7 @@ export class GameMode implements GameModeConfig {
       case GameModes.DAILY:
         return waveIndex === 50;
       case GameModes.GREED:
-        return waveIndex === 50;
+        return waveIndex === 100;
     }
   }
 
