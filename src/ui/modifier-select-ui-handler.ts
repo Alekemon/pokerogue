@@ -296,7 +296,7 @@ export default class ModifierSelectUiHandler extends AwaitableUiHandler {
         if (this.scene.shopCursorTarget === ShopCursorTarget.CHECK_TEAM) {
           this.setRowCursor(0);
           this.setCursor(2);
-        } else if ((this.scene.shopCursorTarget === ShopCursorTarget.SHOP) && this.scene.gameMode.hasNoShop && (this.scene.gameMode.hasW10Shop && !(return waveIndex % 10 === 10 || return waveIndex === 1))) {
+        } else if ((this.scene.shopCursorTarget === ShopCursorTarget.SHOP) && this.scene.gameMode.hasNoShop && (this.scene.gameMode.hasW10Shop && !(waveIndex % 10 === 10 ||waveIndex === 1))) {
           this.setRowCursor(ShopCursorTarget.REWARDS);
           this.setCursor(0);
         } else {
